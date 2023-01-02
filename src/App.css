@@ -1,0 +1,8 @@
+.linkH{
+    transition: 0.5s;
+}
+.linkH:hover{
+    color: green;
+    font-weight: 400;
+    transform: scale(1.1);
+}
