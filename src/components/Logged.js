@@ -1,10 +1,5 @@
 import React from "react";
 
-import firebaseApp from "../firebase";
-import { getAuth, signOut } from "firebase/auth";
-
-const auth = getAuth(firebaseApp);
-
 export default function Logged(user) {
   return (
     <>
@@ -38,7 +33,6 @@ export default function Logged(user) {
                     href="#"
                     className="nav-link linkH"
                     to="/login"
-                    onClick={() => signOut(auth)}
                   >
                     Log out
                   </a>

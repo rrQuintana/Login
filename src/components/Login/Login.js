@@ -1,86 +1,9 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Input from "./Input.jsx";
 import Label from "./Label.jsx";
 
-import firebaseApp from "../../firebase";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
-import {
-  getAuth,
-  FirebaseAuthException,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-} from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-
-const auth = getAuth(firebaseApp);
-const firestore = getFirestore(firebaseApp);
-
 export default function Login() {
-  const navigate = useNavigate();
-
-  onAuthStateChanged(auth, (usuarioFirebase) => {
-    if (usuarioFirebase) {
-      navigate("/");
-    }
-  });
-
-  const [isRegristrando, SetIsRegristrando] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [datosError, setDatosError] = useState(false);
-  const [errorMs , setErrorMs] = useState("Error")
-
-  /*Contraseña mayor a 6 caracteres  */
-  function handleChange(name, value) {
-    setDatosError(false);
-    if (value.length < 6) {
-      setPasswordError(true);
-    } else {
-      setPasswordError(false);
-    }
-  }
-
-  /* Registro del login con firebase */
-  const submitHandler = (e) => {
-    e.preventDefault();
-
-    const email = e.target.email.value;
-    const password = e.target.password.value;
-
-    if (isRegristrando) {
-      // Registrar
-      const rol = e.target.rol.value;
-      registrarUsuario(email, password, rol);
-    } else {
-      // Logear
-      signInWithEmailAndPassword(auth, email, password).catch((err) => {
-        setDatosError(true);
-        err.code === "auth/invalid-email"  && (setErrorMs("Correo inválido"))
-        err.code === "auth/wrong-password"  && (setErrorMs("Contraseña incorrecta"))
-        err.code === "auth/user-not-found"  && (setErrorMs("Correo no encontrado"))
-      });
-    }
-  };
-
-  async function registrarUsuario(email, password, rol) {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((usuarioFirebase) => {
-        const docuRef = doc(firestore, `/usuarios/${usuarioFirebase.user.uid}`);
-        setDoc(docuRef, {
-          correo: email,
-          rol: rol,
-        });
-      })
-      .catch((err) => {
-        setDatosError(true);
-        console.log(err.code)
-        err.code === "auth/missing-email"  && (setErrorMs("Falta el correo"))
-        err.code === "auth/invalid-email"  && (setErrorMs("Correo invalido"))
-        err.code === "auth/internal-error"  && (setErrorMs("Datos mal ingresados"))
-      });
-  }
-
+  
   return (
     <>
       <div className="vh-100 d-flex justify-content-center ">
@@ -109,7 +32,7 @@ export default function Login() {
                     <Input
                       attribute={{
                         id: "email",
-                        type: "text",
+                        type: "emal",
                         placeholder: "Ingrese su correo",
                       }}
                       handleChange={() => {
@@ -179,7 +102,7 @@ export default function Login() {
                           )}
                           className="text-center btn  btn-block mb-4 "
                         >
-                          Tines una cuenta? Log In
+                          Tienes una cuenta? <a href="#">Log In</a>
                         </div>
                       </div>
                     </>
@@ -200,7 +123,7 @@ export default function Login() {
                           )}
                           className="text-center btn  btn-block mb-4 "
                         >
-                          No tines cuenta? Registrate
+                          No tines cuenta?  <a href="#">Registrate</a> 
                         </div>
                       </div>
                     </>

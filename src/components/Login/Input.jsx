@@ -11,6 +11,7 @@ const Input = ({ attribute, param, handleChange}) => {
         onChange={ (e) => handleChange(e.target.name, e.target.value) }
         className="form-control"
         param={attribute.id}
+        required
       />
     </>
   );
